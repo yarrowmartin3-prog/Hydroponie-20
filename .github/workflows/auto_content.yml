@@ -1,0 +1,29 @@
+name: Auto content (daily, with images)
+on:
+  schedule:
+    - cron: "30 11 * * *"   # 07:30 ET (America/Toronto)
+  workflow_dispatch: {}
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install pillow
+      - name: Generate post
+        run: |
+          python tools/generate_post.py
+          python tools/render_posts.py
+      - name: Commit changes
+        run: |
+          git config user.name "nova-bot"
+          git config user.email "bot@noreply.local"
+          git add -A
+          git commit -m "chore: auto post $(date -u +'%Y-%m-%d')" || echo "No changes"
+          git push || true
