@@ -1,7 +1,7 @@
 name: Auto content (daily, with images)
 on:
   schedule:
-    - cron: "30 11 * * *"   # 07:30 ET (America/Toronto)
+    - cron: "30 11 * * *"   # 07:30 ET
   workflow_dispatch: {}
 jobs:
   generate:
@@ -19,6 +19,8 @@ jobs:
       - name: Generate post
         run: |
           python tools/generate_post.py
+      - name: Render posts
+        run: |
           python tools/render_posts.py
       - name: Commit changes
         run: |
