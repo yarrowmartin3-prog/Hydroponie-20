@@ -1,0 +1,51 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hydroponie 2.0 — Blog IA</title>
+<meta name="description" content="Tutoriels hydroponie, comparatifs, guides de culture. Articles générés automatiquement, sans données personnelles.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+<header>
+  <strong>Hydroponie 2.0</strong>
+  <nav>
+    <a href="/">Accueil</a>
+    <a href="https://novagrow.example" target="_blank">NovaGrow</a>
+  </nav>
+</header>
+<main>
+  <section class="hero">
+    <div class="copy">
+      <div class="badge">Culture connectée</div>
+      <h1>Hydroponie facile à la maison</h1>
+      <p>Tutoriels, comparatifs, bonnes pratiques — publiés automatiquement sans données personnelles.</p>
+      <a class="btn" href="https://novagrow.example" target="_blank">Découvrir NovaGrow →</a>
+    </div>
+  </section>
+  <section>
+    <h2>Articles récents</h2>
+    <div id="posts" class="grid"></div>
+  </section>
+</main>
+<footer>© <span id="y"></span> Hydroponie 2.0</footer>
+<script>
+document.getElementById('y').textContent = new Date().getFullYear();
+async function load(){
+  try{
+    const data = await fetch('/posts.json').then(r=>r.json());
+    const root = document.getElementById('posts');
+    root.innerHTML = data.slice(-9).reverse().map(p=>`
+      <article class="card">
+        <img src="${p.image || '/assets/placeholder.jpg'}" alt="cover">
+        <h3>${p.title}</h3>
+        <p><small>${p.date}</small></p>
+        <a class="btn" href="posts/${p.file.replace('.md','.html')}">Lire</a>
+      </article>
+    `).join('');
+  }catch(e){
+    document.getElementById('posts').innerHTML = '<p class="card">Aucun article pour le moment.</p>';
+  }
+}
+load();
+</script>
